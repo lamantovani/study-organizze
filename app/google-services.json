@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "647307517109",
+    "firebase_url": "https://organizze-39b73-default-rtdb.firebaseio.com",
+    "project_id": "organizze-39b73",
+    "storage_bucket": "organizze-39b73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647307517109:android:e98f1a0ee4210e4e98b2fc",
+        "android_client_info": {
+          "package_name": "com.lasmantovani.organizze"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647307517109-u5l20qc51n6kmlhsd3qih6g5o2hpvos8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHdryV9sTup00272vIV70p8Jij5dUArCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647307517109-u5l20qc51n6kmlhsd3qih6g5o2hpvos8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
