@@ -56,6 +56,7 @@ public class DespesasActivity extends AppCompatActivity {
             movimentacao.setTipo("d");
             movimentacao.salvar(data);
             atualizarDespesa(valorRecuperado);
+            finish();
         }
     }
 

@@ -68,6 +68,7 @@ public class ReceitasActivity extends AppCompatActivity {
             movimentacao.setTipo("r");
             movimentacao.salvar(data);
             atualizarReceita(valorRecuperado);
+            finish();
         }
     }
 

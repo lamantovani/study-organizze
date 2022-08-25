@@ -10,7 +10,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.Organizze.AppBarOverlay">
+        android:theme="@style/Theme.Organizze.AppBarOverlay"
+        android:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -41,7 +42,7 @@
         fab:menu_colorPressed="@color/colorAccent"
         fab:menu_colorRipple="#99FFFFFF"
         fab:menu_animationDelayPerItem="50"
-        fab:menu_icon="@drawable/ic_baseline_currency_exchange_24"
+        fab:menu_icon="@drawable/ic_baseline_add_24"
         fab:menu_buttonSpacing="0dp"
         fab:menu_labels_margin="0dp"
         fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"

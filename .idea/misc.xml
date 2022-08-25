@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../Library/Android/sdk/platforms/android-32/android.jar!/res/layout/action_menu_item_layout.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1375" />
         <entry key="app/src/main/res/drawable/ic_cadeado_conza.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_email_cinza.xml" value="0.1235" />
@@ -21,6 +22,7 @@
         <entry key="app/src/main/res/layout/intro_4.xml" value="0.37916666666666665" />
         <entry key="app/src/main/res/layout/intro_5.xml" value="0.37916666666666665" />
         <entry key="app/src/main/res/layout/intro_cadastro.xml" value="0.34629629629629627" />
+        <entry key="app/src/main/res/menu/menu_principal.xml" value="0.21" />
       </map>
     </option>
   </component>
