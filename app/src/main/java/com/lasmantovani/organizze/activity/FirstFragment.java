@@ -1,15 +1,19 @@
 package com.lasmantovani.organizze.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +55,7 @@ public class FirstFragment extends Fragment {
     private RecyclerView recyclerView;
     private AdapterMovimentacao adapterMovimentacao;
     private List<Movimentacao> movimentacoes = new ArrayList<Movimentacao>();
+    private Movimentacao movimentacao;
     private DatabaseReference movimentacaoRef;
     private String mesAnoSelecionado;
 
@@ -73,6 +78,7 @@ public class FirstFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
         recyclerView = view.findViewById(R.id.recyclerMovimentos);
         configuraCalendarView();
+        swipe();
 
         adapterMovimentacao = new AdapterMovimentacao(movimentacoes, getContext());
 
@@ -80,6 +86,77 @@ public class FirstFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapterMovimentacao);
+    }
+
+    public void swipe() {
+        ItemTouchHelper.Callback itemTouch = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                int dragFlag = ItemTouchHelper.ACTION_STATE_IDLE;
+                int swipeFlags = ItemTouchHelper.START;
+                return makeMovementFlags(dragFlag, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                excluirMovimentacao(viewHolder);
+            }
+        };
+
+        new ItemTouchHelper(itemTouch).attachToRecyclerView(recyclerView);
+    }
+
+    public void excluirMovimentacao(RecyclerView.ViewHolder viewHolder) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        alertDialog.setTitle("Excluir Movimentação da Conta");
+        alertDialog.setMessage("Você tem certeza que deseja realmente excluir a movimentação?");
+        alertDialog.setCancelable(false);
+
+        alertDialog.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                int position = viewHolder.getAdapterPosition();
+                movimentacao = movimentacoes.get(position);
+
+                movimentacaoRef = firebaseRef.child(ConfiguracaoFirebase.DATABASE_MOVIMENTACAO)
+                        .child(ConfiguracaoFirebase.getIdUsuario())
+                        .child(mesAnoSelecionado);
+
+                movimentacaoRef.child(movimentacao.getKey()).removeValue();
+                adapterMovimentacao.notifyItemRemoved(position);
+                atualizarSaldo();
+            }
+        });
+
+        alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getContext(), "Cancelado", Toast.LENGTH_SHORT).show();
+                adapterMovimentacao.notifyDataSetChanged();
+            }
+        });
+
+        AlertDialog alert = alertDialog.create();
+        alert.show();
+    }
+
+    public void atualizarSaldo() {
+        usuarioRef = ConfiguracaoFirebase.getUsuarioRef();
+
+        if (movimentacao.getTipo().equals("r")) {
+            receitaTotal = receitaTotal - movimentacao.getValor();
+            usuarioRef.child(ConfiguracaoFirebase.DATABASE_RECEITA_TOTAL).setValue(receitaTotal);
+        }
+
+        if (movimentacao.getTipo().equals("d")) {
+            despesaTotal = despesaTotal - movimentacao.getValor();
+            usuarioRef.child(ConfiguracaoFirebase.DATABASE_DESPESA_TOTAL).setValue(despesaTotal);
+        }
     }
 
     public void recuperarMovimentacao() {
@@ -96,6 +173,7 @@ public class FirstFragment extends Fragment {
                 for (DataSnapshot dados : snapshot.getChildren()) {
                     Log.i("DADOS", "retorno: " + dados.toString());
                     Movimentacao movimentacao = dados.getValue(Movimentacao.class);
+                    movimentacao.setKey(dados.getKey());
                     movimentacoes.add(movimentacao);
                 }
                 adapterMovimentacao.notifyDataSetChanged();
@@ -134,12 +212,6 @@ public class FirstFragment extends Fragment {
         Log.i("Evento", "Evento foi adicionado");
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
     public void configuraCalendarView() {
         String meses[] = {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Stembro", "Outubro", "Novembro", "Dezembro"};
         calendarView.setTitleMonths(meses);
@@ -159,6 +231,12 @@ public class FirstFragment extends Fragment {
                 recuperarMovimentacao();
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
